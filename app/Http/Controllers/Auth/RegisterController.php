@@ -28,7 +28,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -50,6 +50,8 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'max:11'],
+            'profile' => ['required'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -58,15 +60,28 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \App\Models\User
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        // File upload
+        $file_name = time() . '.' . $data['profile']->extension(); // e.g., 123412343434.png
+        $upload = $data['profile']->move(public_path('images/profiles/'), $file_name); // Upload file to folder
+
+        if ($upload) {
+            $profile = "/images/profiles/" . $file_name; // Save profile path in the database
+
+            return User::create([
+                'name' => $data['name'],
+                'phone' => $data['phone'],
+                'profile' => $profile,
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'role' => 'User',
+            ]);
+        }
+
+        
     }
 }
