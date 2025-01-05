@@ -1,4 +1,5 @@
 @extends('layouts.admin')
+
 @section('content')
 <div class="container-fluid px-4">
     <h1 class="mt-4 d-inline">
@@ -14,6 +15,7 @@
     <a href="{{ route('backend.orderAccept') }}" class="btn btn-primary mx-3 float-end">Order Accept List</a>
     <a href="{{ route('backend.orders') }}" class="btn btn-secondary float-end">Order List</a>
 </div>
+
 <div class="card mb-4">
     <div class="card-header">
         <i class="fas fa-table me-1"></i>
@@ -27,6 +29,8 @@
                     <th>Voucher No</th>
                     <th>User Name</th>
                     <th>Status</th>
+                    <th>Payment Logo</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,7 +42,8 @@
                         <tr>
                             <td>{{ $i++ }}</td>
                             <td>{{ $order->voucher_no }}</td>
-                            <td>{{ $order->user->name }}</td>
+                            <!-- Check if 'user' exists before accessing 'name' -->
+                            <td>{{ $order->user ? $order->user->name : 'Unknown User' }}</td>
                             <td>
                                 <span class="badge 
                                     @if($order->status == 'Pending')
@@ -51,9 +56,10 @@
                                 ">
                                     {{ $order->status }}
                                 </span>
-                            </td>
+                            </td>   
+                            <!-- Check if 'payment' exists before accessing 'logo' -->
                             <td>
-                                <img src="{{ $order->payment->logo }}" width="50" alt="">
+                                <img src="{{ $order->payment ? $order->payment->logo : '' }}" width="50" alt="">
                             </td>
                             <td>
                                 <a href="{{ route('backend.orders.detail', $order->voucher_no) }}" class="btn btn-sm btn-info">Detail</a>

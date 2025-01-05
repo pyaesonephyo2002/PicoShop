@@ -17,16 +17,16 @@
             Payment Details
         </div>
         <div class="card-body">
-            <form method="post" action="{{ route('backend.payments.store') }}" enctype="multipart/form-data">
-                @csrf
+        <form method="post" action="{{ route('backend.payments.store') }}" enctype="multipart/form-data">
+        @csrf
                 <div class="mb-3">
                     <label for="name" class="form-label">Name:</label>
-                    <input type="text" class="form-control" id="name" name="name" required>
-                </div>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}">
+                    </div>
                 <div class="mb-3">
                     <label for="logo" class="form-label">Logo:</label>
-                    <input type="file" class="form-control" id="logo" name="logo" required>
-                </div>
+                    <input type="file" class="form-control" id="logo" name="logo" value="{{ old('logo') }}">
+                    </div>
                 <button type="submit" class="btn btn-primary">Save</button>
             </form>
         </div>

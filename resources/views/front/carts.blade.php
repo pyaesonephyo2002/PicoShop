@@ -43,8 +43,8 @@
                 </select>
                 </div>
                 <div class="col-md-12">
-                    <label for="note">Note</label>
-                    <textarea name="note"   class="form-control"></textarea>
+                    <label for="address">Address</label>
+                    <textarea name="address"   class="form-control"></textarea>
                 </div>
                 <button class="btn btn-success my-3" id="order-now" type="submit">Order Now</button>
         </form>

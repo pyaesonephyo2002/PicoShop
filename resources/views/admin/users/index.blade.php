@@ -1,53 +1,64 @@
 @extends('layouts.admin')
 @section('content')
 <div class="container-fluid px-4">
+    <!-- Flash Messages -->
+    @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
     <div class="my-3">
-        <h1 class="mt-4 d-inline">Items</h1>
-        <a href="{{ route('backend.items.create') }}" class="btn btn-primary float-end">Create Item</a>
+        
+        <h1 class="mt-4 d-inline">Users</h1>
+        <a href="{{ route('backend.users.create') }}" class="btn btn-primary float-end">Create User</a>
     </div>
     
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-        <li class="breadcrumb-item active">Items</li>
+
+        <li class="breadcrumb-item active">Users</li>
     </ol>
     
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            Item List
+            User List
         </div>
         <div class="card-body">
             <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>CodeNo</th>
-                        <th>Item Name</th>
-                        <th>Price</th>
-                        <th>InStock</th>
-                        <th>Category</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @php $i = 1; @endphp
-                    @foreach ($items as $item)
+                    @foreach ($users as $user)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            <td>{{ $item->code_no }}</td>
-                            <td>{{ $item->name }}</td>
-                            <td>{{ $item->price }}</td>
-                            <td>{{ $item->instock }}</td>
-                            <td>{{ $item->category ? $item->category->name : 'No Category' }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->role }}</td>
                             <td>
-                                <a href="{{route('backend.items.edit',$item->id)}}" class="btn btn-sm btn-warning">Edit</a>
-                                <button type="button" class="btn btn-sm btn-danger delete" data-id="{{$item->id}}">Delete</button>
+                                <a href="{{route('backend.users.edit', $user->id)}}" class="btn btn-sm btn-warning">Edit</a>
+                                <button type="button" class="btn btn-sm btn-danger delete" data-id="{{$user->id}}">Delete</button>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
-            {{ $items->links() }}
+            {{ $users->links() }}
+
         </div>
     </div>
 </div>
@@ -61,7 +72,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <h3>Are you sure to delete this data?</h3>
+                <h3>Are you sure to delete this user?</h3>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
@@ -81,7 +92,7 @@
     $(document).ready(function(){
         $('tbody').on('click','.delete',function(){
             let id = $(this).data('id');
-            $('#deleteForm').attr('action',`items/${id}`);
+            $('#deleteForm').attr('action', `users/${id}`);
             $('#deleteModal').modal('show');
         })
     })

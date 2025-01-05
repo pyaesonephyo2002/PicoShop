@@ -14,6 +14,16 @@ class CheckUserRole
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
+    // public function handle(Request $request, Closure $next, $role): Response
+    // {
+    //     $roles = explode('|', $role);
+    //     if(Auth::check() && in_array(Auth::user()->role, $roles)){
+    //         return $next($request);
+    //     }
+    //         return redirect('/');
+    // }
+
+
     public function handle(Request $request, Closure $next, $role): Response
     {
         $roles = explode('|', $role);

@@ -23,12 +23,12 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'phone',
-        'profile',
+        'profile', // Ensure this is included
         'email',
         'password',
-        'role'
-
+        'role',
     ];
+    
 
     /**
      * The attributes that should be hidden for serialization.
@@ -52,4 +52,6 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    
 }

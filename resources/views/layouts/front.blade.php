@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en">    
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -24,13 +24,16 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                         <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{route('shop')}}">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#!">All Products</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                                <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                                @php
+                                $categories = \App\Models\Category::all();
+                                @endphp
+                                @foreach($categories as $category)
+                                    <li><a class="dropdown-item" href="{{route('item.categories', $category->id)}}">{{$category->name}}</a></li>
+                                @endforeach
                             </ul>
                         </li>
                     </ul>
@@ -40,7 +43,6 @@
                             Cart
                             <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart-count">0</span>
                         </a>
-                    
                     </form>
                     @guest
                     <a href="/login" class="btn mx-3">Login</a>
@@ -87,10 +89,10 @@
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
-    <script src="{{asset(('front-assets/js/scripts.js'))}}"></script>
-    <!-- add to cart js -->
-    <script src="{{asset('front-assets/js/add_to_cart.js')}}"></script>
+        <script src="{{asset(('front-assets/js/scripts.js'))}}"></script>
+        <!-- add to cart js -->
+        <script src="{{asset('front-assets/js/add_to_cart.js')}}"></script>
 
-    @yield('script')
+        @yield('script')
     </body>
 </html>

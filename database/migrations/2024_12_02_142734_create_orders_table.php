@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('qty');
             $table->string('payment_slip');
             $table->string('status');
-            $table->string('note')->nullable(); // Nullable in case the note is optional
+            $table->text('address')->nullable(); // Nullable in case the note is optional
             $table->unsignedBigInteger('item_id');
             $table->foreign('item_id')
                 ->references('id')

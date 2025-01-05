@@ -1,6 +1,6 @@
 @extends('layouts.admin')
-@section('content')
 
+@section('content')
 <div class="container-fluid px-4">
     <div class="my-5">
         <h3 class="my-4 d-inline">Order Details</h3>
@@ -13,14 +13,16 @@
 
             <div class="row">
                 <div class="col-lg-6">
-                    <p>Name - {{ $order_first->user->name }}</p>
-                    <p>Phone - {{ $order_first->user->phone }}</p>
+                    <!-- Check if user is present -->
+                    <p>Name - {{ optional($order_first->user)->name ?? 'N/A' }}</p>
+                    <p>Phone - {{ optional($order_first->user)->phone ?? 'N/A' }}</p>
                     <p>Voucher No - {{ $order_first->voucher_no }}</p>
                 </div>
                 <div class="col-md-6 text-end">
                     <p>Date - {{ $order_first->created_at }}</p>
-                    <p>Address - </p>
-                    <p>Payment Method - {{ $order_first->payment->name }}</p>
+                    <p>Address - {{ $order_first->user->address ?? 'N/A' }}</p>
+                    <!-- Check if payment method exists -->
+                    <p>Payment Method - {{ optional($order_first->payment)->name ?? 'N/A' }}</p>
                 </div>
             </div>
 
@@ -43,9 +45,9 @@
                     @foreach($orders as $order)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            <td>{{ $order->item->name }}</td>
-                            <td>{{ $order->item->price }}</td>
-                            <td>{{ $order->item->discount }}</td>
+                            <td>{{ optional($order->item)->name ?? 'N/A' }}</td>
+                            <td>{{ optional($order->item)->price ?? 'N/A' }}</td>
+                            <td>{{ optional($order->item)->discount ?? 'N/A' }}</td>
                             <td>{{ $order->qty }}</td>
                             <td>{{ $order->total }}</td>
                         </tr>
@@ -62,7 +64,8 @@
 
             <div class="row">
                 <div class="offset-md-4 col-md-4">
-                    <img src="{{ $order_first->payment_slip }}" alt="" class="img-fluid">
+                    <!-- Check if payment slip exists -->
+                    <img src="{{ $order_first->payment_slip ?? '' }}" alt="" class="img-fluid">
                 </div>
                 <form action="{{ route('backend.orders.status', $order_first->voucher_no) }}" class="d-grid gap-2 my-5" method="post">
                     @csrf

@@ -1,86 +1,83 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Payment;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PaymentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
-    {
-        $payments = Payment::orderBy('id', 'DESC')->paginate(15);
-        return view('admin.payments.index', compact('payments'));
-    }
+{
+    $payments = Payment::orderBy('id', 'DESC')->paginate(15);
+    return view('admin.payments.index', compact('payments'));
+}
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
         return view('admin.payments.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
 
+        if ($request->hasFile('logo')) {
+            $path = $request->file('logo')->store('payments', 'public');
+            $validated['logo'] = $path;
+        }
 
-         // dd($request);
-         $payments = Payment::create($request->all());
-         $payments->save();
- 
-         return redirect()->route('backend.payments.index');
-        // $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        // ]);
+        Payment::create($validated);
 
-        // $path = $request->file('logo')->store('logos', 'public');
-
-        // Payment::create([
-        //     'name' => $request->input('name'),
-        //     'image' => $path,
-        // ]);
-
-        // return redirect()->route('backend.payments.index')->with('success', 'Payment created successfully.');
+        return redirect()->route('backend.payments.index')->with('success', 'Payment created successfully');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-      
+        $payment = Payment::findOrFail($id);
+        return view('admin.payments.edit', compact('payment'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-       
+        $payment = Payment::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+        
+
+        if ($request->hasFile('logo')) {
+            if ($payment->logo) {
+                Storage::delete('public/' . $payment->logo);
+            }
+
+            $path = $request->file('logo')->store('payments', 'public');
+            $payment->logo = $path;
+        }
+
+        $payment->name = $validated['name'];
+        $payment->save();
+
+        return redirect()->route('backend.payments.index')->with('success', 'Payment updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-       
+        $payment = Payment::findOrFail($id);
+
+        if ($payment->logo) {
+            Storage::delete('public/' . $payment->logo);
+        }
+
+        $payment->delete();
+
+        return redirect()->route('backend.payments.index')->with('success', 'Payment deleted successfully');
     }
 }

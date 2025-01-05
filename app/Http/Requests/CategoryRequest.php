@@ -2,20 +2,16 @@
 
 namespace App\Http\Requests;
 
-
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\File;
-use App\Http\Requests\ItemUpdateRequest;
 
-
-class ItemUpdateRequest extends FormRequest
+class CategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -26,13 +22,10 @@ class ItemUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-        'code_no' => 'required', // Fixed spacing and arrow operator
+        
         'name' => 'required',    // Fixed spacing and arrow operator
-        'price' => 'required',   // Corrected arrow operator
-        'discount' => 'required', // Fixed arrow operator
-        'instock' => 'required', // Corrected arrow operator
-        'description' => 'required', // Fixed spacing and arrow operator
-        'category_id' => 'required', // Corrected arrow operator
+        'image' => ['required', 'file', 'image'], // Ensures the image validation rule is properly formatted
+        
         ];
     }
 }
