@@ -57,6 +57,55 @@ class UserController extends Controller
         }
     }
 
+    // Display the form for editing an existing user
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        return view('admin.users.edit', compact('user'));
+    }
+
+    // Update the specified user in the database
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone' => 'required|numeric',
+            'role' => 'required|in:admin,user',
+            'password' => 'nullable|min:8|confirmed',
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        try {
+            if ($request->hasFile('profile_image')) {
+                // Delete old profile image if exists
+                if ($user->profile) {
+                    Storage::disk('public')->delete($user->profile);
+                }
+
+                $user->profile = $request->file('profile_image')->store('profiles', 'public');
+            }
+
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->role = $request->role;
+
+            if ($request->password) {
+                $user->password = bcrypt($request->password);
+            }
+
+            $user->save();
+
+            return redirect()->route('backend.users.index')->with('success', 'User updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('Failed to update user: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to update user. Please try again.');
+        }
+    }
+
     public function destroy($id)
     {
         try {

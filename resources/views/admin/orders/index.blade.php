@@ -58,9 +58,18 @@
                                 </span>
                             </td>   
                             <!-- Check if 'payment' exists before accessing 'logo' -->
-                            <td>
+                            <!-- <td>
                                 <img src="{{ $order->payment ? $order->payment->logo : '' }}" width="50" alt="">
-                            </td>
+                            </td> -->
+
+                            <td>
+                            <img 
+                                src="{{ $order->payment && $order->payment->logo ? asset('storage/' . $order->payment->logo) : asset('images/placeholder.png') }}" 
+                                width="75" 
+                                alt="Payment Logo">
+                        </td>
+
+
                             <td>
                                 <a href="{{ route('backend.orders.detail', $order->voucher_no) }}" class="btn btn-sm btn-info">Detail</a>
                             </td>

@@ -20,7 +20,7 @@
                 </div>
                 <div class="col-md-6 text-end">
                     <p>Date - {{ $order_first->created_at }}</p>
-                    <p>Address - {{ $order_first->user->address ?? 'N/A' }}</p>
+                    <p>Address - {{ $order_first->address ?? 'N/A' }}</p>
                     <!-- Check if payment method exists -->
                     <p>Payment Method - {{ optional($order_first->payment)->name ?? 'N/A' }}</p>
                 </div>
